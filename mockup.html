@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Twitter Client</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONTS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,600' rel='stylesheet' type='text/css'>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="assets/css/global.css">
+
+
+</head>
+<body>
+  <header class="circle--header">
+    <div class="bounds">
+      <div class="circle--fluid">
+        <div class="circle--fluid--cell">
+          <a class="logo" href="index.html">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 180 146" xml:space="preserve">
+              <path d="M180,17.3c-6.6,2.9-13.7,4.9-21.2,5.8c7.6-4.6,13.5-11.8,16.2-20.4c-7.1,4.2-15,7.3-23.5,8.9C144.8,4.5,135.2,0,124.6,0
+              c-20.4,0-36.9,16.5-36.9,36.9c0,2.9,0.3,5.7,1,8.4C58,43.7,30.8,29,12.5,6.7c-3.2,5.4-5,11.8-5,18.5C7.5,38.1,14.1,49.3,24,56
+              c-6.1-0.2-11.7-1.8-16.7-4.6c0,0.2,0,0.3,0,0.5C7.2,69.7,20,84.6,36.9,88c-3.1,0.8-6.4,1.3-9.7,1.3c-2.4,0-4.7-0.2-6.9-0.7
+              c4.7,14.6,18.3,25.3,34.5,25.6C42,124.1,26.1,130,8.8,130c-3,0-5.9-0.2-8.8-0.5C16.3,139.9,35.8,146,56.6,146
+              c67.9,0,105.1-56.2,105.1-104.9c0-1.6,0-3.2-0.1-4.8C168.8,31.2,175,24.7,180,17.3z"/>
+            </svg>
+            <h1>@grattspore</h1>
+          </a>
+        </div>
+        <div class="circle--fluid--cell align-right">
+          <nav>
+            <ul class="circle--inline">
+              <li><a>Sign Out</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="app--tweet">
+    <form>
+      <div class="circle--fluid">
+        <div class="circle--fluid--cell circle--fluid--primary align-bottom app--tweet--post">
+          <div class="app--avatar" style="background-image: url(assets/images/m-spore.png)">
+            <img src="assets/images/m-spore.png" />
+          </div>
+
+          <textarea class="circle--textarea--input" placeholder="What's happening?" id="tweet-textarea"></textarea>
+          <strong class="app--tweet--char" id="tweet-char">140</strong>
+        </div>
+        <div class="circle--fluid--cell align-bottom">
+          <button class="button-primary">Tweet</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="bounds app--body">
+    <div class="app--section--header">
+      <div class="grid-33">
+        <div class="app--section--heading">
+          <h2>Timeline</h2>
+        </div>
+
+      </div>
+      <div class="grid-33">
+        <div class="app--section--heading">
+          <strong>129</strong>
+          <h2>Following</h2>
+        </div>
+      </div>
+      <div class="grid-33">
+        <div class="app--section--heading">
+          <h2>Direct Messages</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-33">
+      <div class="app--section">
+        <ul class="app--tweet--list">
+          <li>
+            <strong class="app--tweet--timestamp">4h</strong>
+            <a class="app--tweet--author">
+              <div class="app--avatar" style="background-image: url(images/f-spore.png)">
+                <img src="images/f-spore.png" />
+              </div>
+              <h4>Jill Spore</h4> @jillspore
+            </a>
+            <p>It's time I come clean about a few things: The pretzel is my favorite chip.</p>
+            <ul class="app--tweet--actions circle--list--inline">
+              <li>
+                <a class="app--reply">
+                  <span class="tooltip">Reply</span>
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 38 28" xml:space="preserve">
+                    <path d="M24.9,10.5h-8.2V2.8c0-1.1-0.7-2.2-1.7-2.6c-1-0.4-2.2-0.2-3,0.6L0.8,12c-1.1,1.1-1.1,2.9,0,4L12,27.2
+                    c0.5,0.5,1.2,0.8,2,0.8c0.4,0,0.7-0.1,1.1-0.2c1-0.4,1.7-1.5,1.7-2.6v-7.7h8.2c3.3,0,6,2.5,6,5.6v1.3c0,2,1.6,3.5,3.5,3.5
+                    s3.5-1.6,3.5-3.5v-1.3C38,16.2,32.1,10.5,24.9,10.5z"/>
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <a class="app--retweet">
+                  <span class="tooltip">Retweet</span>
+                  <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 28" xml:space="preserve">
+                    <path d="M25.2,22.4H13.1v-9.3h4.7c1.1,0,2.2-0.7,2.6-1.7c0.4-1,0.2-2.3-0.6-3.1l-7.5-7.5c-1.1-1.1-2.9-1.1-4,0L0.8,8.3
+                    c-0.8,0.8-1,2-0.6,3.1c0.4,1,1.5,1.7,2.6,1.7h4.7v12.1c0,1.5,1.3,2.8,2.8,2.8h14.9c1.5,0,2.8-1.3,2.8-2.8
+                    C28,23.7,26.7,22.4,25.2,22.4z"/>
+                    <path d="M49.8,16.7c-0.4-1-1.5-1.7-2.6-1.7h-4.7V2.8c0-1.5-1.3-2.8-2.8-2.8H24.8C23.3,0,22,1.3,22,2.8s1.3,2.8,2.8,2.8h12.1v9.3
+                    h-4.7c-1.1,0-2.2,0.7-2.6,1.7c-0.4,1-0.2,2.3,0.6,3.1l7.5,7.5c0.5,0.5,1.3,0.8,2,0.8c0.7,0,1.4-0.3,2-0.8l7.5-7.5
+                    C50,18.9,50.2,17.7,49.8,16.7z"/>
+                  </svg>
+                  <strong>75</strong>
+                </a>
+              </li>
+              <li>
+                <a class="app--like">
+                  <span class="tooltip">Like</span>
+                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 35 28" xml:space="preserve">
+                    <path class="st0" d="M25.8,0c-3.6,0-6.8,2.1-8.3,5.1C16,2.1,12.9,0,9.2,0C4.1,0,0,4.1,0,9.2C0,21.4,17.3,28,17.3,28S35,21.3,35,9.2
+                    C35,4.1,30.9,0,25.8,0L25.8,0z"/>
+                  </svg>
+                  <strong>12</strong>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="grid-33">
+      <div class="app--section">
+        <ul class="app--user--list">
+          <li>
+            <div class="circle--fluid">
+              <div class="circle--fluid--cell circle--fluid--primary">
+                <a class="app--tweet--author">
+                  <div class="app--avatar" style="background-image: url(images/f-spore.png)">
+                    <img src="images/f-spore.png" />
+                  </div>
+                  <h4>Jill Spore</h4>
+                  <p>@jillspore</p>
+                </a>
+              </div>
+              <div class="circle--fluid--cell">
+                <a class="button button-text">Unfollow</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="circle--fluid">
+              <div class="circle--fluid--cell circle--fluid--primary">
+                <a class="app--tweet--author">
+                  <div class="app--avatar" style="background-image: url(images/f-spore.png)">
+                    <img src="images/f-spore.png" />
+                  </div>
+                  <h4>Jill Spore</h4>
+                  <p>@jillspore</p>
+                </a>
+              </div>
+              <div class="circle--fluid--cell">
+                <a class="button button-text">Unfollow</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="circle--fluid">
+              <div class="circle--fluid--cell circle--fluid--primary">
+                <a class="app--tweet--author">
+                  <div class="app--avatar" style="background-image: url(images/f-spore.png)">
+                    <img src="images/f-spore.png" />
+                  </div>
+                  <h4>Jill Spore</h4>
+                  <p>@jillspore</p>
+                </a>
+              </div>
+              <div class="circle--fluid--cell">
+                <a class="button button-text">Unfollow</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="circle--fluid">
+              <div class="circle--fluid--cell circle--fluid--primary">
+                <a class="app--tweet--author">
+                  <div class="app--avatar" style="background-image: url(images/f-spore.png)">
+                    <img src="images/f-spore.png" />
+                  </div>
+                  <h4>Jill Spore</h4>
+                  <p>@jillspore</p>
+                </a>
+              </div>
+              <div class="circle--fluid--cell">
+                <a class="button">Follow</a>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div class="circle--fluid">
+              <div class="circle--fluid--cell circle--fluid--primary">
+                <a class="app--tweet--author">
+                  <div class="app--avatar" style="background-image: url(images/f-spore.png)">
+                    <img src="images/f-spore.png" />
+                  </div>
+                  <h4>Jill Spore</h4>
+                  <p>@jillspore</p>
+                </a>
+              </div>
+              <div class="circle--fluid--cell">
+                <a class="button button-text">Unfollow</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="grid-33">
+      <div class="app--section">
+        <ul class="app--message--list">
+          <li>
+            <h3>Conversation with <a>Jill Spore</a></h3>
+            <ul class="app--message--conversation">
+              <li class="app--message">
+                <div class="app--avatar" style="background-image: url(images/f-spore.png)">
+                  <img src="images/f-spore.png" />
+                </div>
+                <p class="app--message--text">How are things?</p>
+                <p class="app--message--timestamp">3 hours ago</p>
+              </li>
+              <li class="app--message--me">
+                <div class="app--avatar" style="background-image: url(images/m-spore.png)">
+                  <img src="images/m-spore.png" />
+                </div>
+                <p class="app--message--text">Great! How about you? Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+                <p class="app--message--timestamp">2 hours ago</p>
+              </li>
+              <li class="app--message">
+                <div class="app--avatar" style="background-image: url(images/f-spore.png)">
+                  <img src="images/f-spore.png" />
+                </div>
+                <p class="app--message--text">Fantastic! You wanna grab lunch?</p>
+                <p class="app--message--timestamp">2 hours ago</p>
+              </li>
+              <li class="app--message--me">
+                <div class="app--avatar" style="background-image: url(images/m-spore.png)">
+                  <img src="images/m-spore.png" />
+                </div>
+                <p class="app--message--text">Totes mcgotes. How about Mackey's?</p>
+                <p class="app--message--timestamp">1 hour ago</p>
+              </li>
+              <li class="app--message">
+                <div class="app--avatar" style="background-image: url(images/f-spore.png)">
+                  <img src="images/f-spore.png" />
+                </div>
+                <p class="app--message--text">Aww yeah.. I'm craving a Triple Quarter Mack!</p>
+                <p class="app--message--timestamp">1 hour ago</p>
+              </li>
+            </ul>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

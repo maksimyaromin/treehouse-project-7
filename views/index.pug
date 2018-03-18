@@ -1,0 +1,32 @@
+extends shared/layout.pug
+
+block styles
+    link(href="https://fonts.googleapis.com/css?family=Work+Sans:400,600" rel="stylesheet")
+    link(rel="stylesheet" href="./css/global.css")
+
+block body
+    include header.pug
+    include tweet.pug
+
+    div.bounds.app--body
+        div.app--section--header
+            div.grid-33
+                div.app--section--heading
+                    h2 Timeline
+            div.grid-33
+                div.app--section--heading
+                    strong 129
+                    h2 Following
+            div.grid-33
+                div.app--section--heading
+                    h2 Direct Messages
+
+        include timeline.pug
+        include following.pug
+        include messages.pug
+
+block scripts
+    script(src="./js/jquery.min.js")
+    script(src="./js/moment.min.js")
+    script(src="./js/index.js")
+                
