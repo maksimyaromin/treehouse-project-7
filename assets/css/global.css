@@ -992,7 +992,6 @@ textarea {
   border-radius: 8px;
   -webkit-appearance: none;
   -moz-appearance: none;
-  appearance: none;
   outline: none;
 }
 /* line 18, ../sass/circle/core/_forms.sass */
@@ -1015,7 +1014,6 @@ input[type="email"], input[type="number"], input[type="search"], input[type="tex
   font-family: "Work Sans", sans-serif;
   -webkit-appearance: none;
   -moz-appearance: none;
-  appearance: none;
   -webkit-transition: 0.2s;
   -moz-transition: 0.2s;
   -ms-transition: 0.2s;
@@ -1051,7 +1049,6 @@ select {
   font-weight: bold;
   -webkit-appearance: menulist;
   -moz-appearance: menulist;
-  appearance: menulist;
 }
 /* line 60, ../sass/circle/core/_forms.sass */
 select:focus {
@@ -1076,7 +1073,7 @@ select:focus {
 .circle--select {
   position: relative;
   width: 100%;
-  border-sizing: border-box;
+  box-sizing: border-box;
   border: 1px solid #aeddfa;
   height: 50px;
   border-radius: 8px;
@@ -2164,7 +2161,8 @@ body {
   clear: both;
 }
 /* line 42, ../sass/global.sass */
-.app--body .grid-33 {
+.app--body .grid-33, 
+.app--body .grid-66 {
   padding: 0;
   height: 100%;
 }
@@ -2409,6 +2407,14 @@ a:hover .app--avatar {
 .app--user--list > li {
   padding: 20px 5px 20px 75px;
 }
+.app--user--list > li.circle--more {
+  text-align: center;
+  padding: 0;
+  background-color: rgb(225, 225, 225);
+}
+.app--user--list > li.circle--more a {
+  margin: 0;
+}
 /* line 200, ../sass/global.sass */
 .app--user--list .button-text {
   margin-right: -15px;
@@ -2511,4 +2517,11 @@ input[type="submit"],
 input[type="reset"],
 input[type="button"] {
   padding: 16px 20px;
+}
+
+.messages,
+.messages-header,
+.timeline,
+.timeline-header {
+  transition: width 300ms ease-in;
 }

@@ -5,6 +5,8 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const MemoryStore = require("session-memory-store")(session);
 const path = require("path");
+const winston = require("winston");
+const expressWinston = require("express-winston");
 
 const config = require("./js/config");
 const Twit = require("twit");
@@ -24,9 +26,25 @@ app.use(session({
     cookie: { maxAge: 2 * 60 * 1000 },
     store: new MemoryStore({ expires: 2 * 60 * 1000 })
 }));
+app.use(expressWinston.logger({
+    transports: [
+        new winston.transports.File({
+            filename: "logs/errors.log",
+            colorize: true
+        })
+    ],
+    expressFormat: true,
+    ignoreRoute: (req, res) => { console.log(res.statusCode); return res.statusCode < 400; }
+}));
 app.use("/", require("./js/routes")(
     new Twit(config)
 ));
+app.use((req, res, next) => {
+    res.status(404).render("error");
+});  
+app.use((err, req, res, next) => {
+    res.status(500).render("error");
+});
 
 http.createServer(app).listen(app.get("port"), () => {
     console.log(`Serving: localhost ${app.get("port")}`);

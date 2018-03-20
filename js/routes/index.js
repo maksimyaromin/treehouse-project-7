@@ -3,6 +3,7 @@ const router = express.Router();
 
 const User = require("../models/user");
 const Tweet = require("../models/tweet");
+const Friend = require("../models/friend");
 
 const SITE_TITLE = "Twitter Client";
 
@@ -18,9 +19,10 @@ const serializeUser = ({
     id, 
     normalizedName: screen_name,
     displayName: name,
-    avatar: profile_image_url
+    avatar: profile_image_url,
+    friendsCount: friends_count
 }) => {
-    return JSON.stringify({ id, screen_name, name, profile_image_url });
+    return JSON.stringify({ id, screen_name, name, profile_image_url, friends_count });
 };
 
 const deserializeUser = (userJSON) => {
@@ -35,7 +37,8 @@ module.exports = (twit) => {
         res.render("index", { 
             title: `${user.displayName} | ${SITE_TITLE}`, 
             name: user.name,
-            avatar: user.avatar
+            avatar: user.avatar,
+            friends: user.friendsCount
         });
     }]);
 
@@ -57,9 +60,31 @@ module.exports = (twit) => {
         twit.get("statuses/home_timeline", { count: 5 }, 
             (err, data, callback) => 
         {
-            const tweets = data.map(tweet => new Tweet(tweet));
+            const tweets = data instanceof Array 
+                ? data.map(tweet => new Tweet(tweet))
+                : null;
             res.json(tweets);
         });
+    });
+
+    router.get("/friends", (req, res) => {
+        const cursor = req.query.cursor || -1;
+        twit.get("friends/list", { count: 5, cursor },
+            (err, data, callback) => 
+        {
+            const friends = data.users instanceof Array
+                ? data.users.map(friend => new Friend(friend)) 
+                : null;
+            res.json({ friends, cursor: data.next_cursor });
+        });
+    });
+
+    router.get("/messages/:id", (req, res) => {
+        const id = req.params.id;
+        twit.get("/direct_messages/events/show", { id },
+            (err, data, callback) => {
+                res.json(data);
+            });
     });
 
     return router;

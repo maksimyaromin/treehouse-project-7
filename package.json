@@ -16,11 +16,13 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
+    "express-winston": "^2.5.0",
     "jquery": "^3.3.1",
     "moment": "^2.21.0",
     "pug": "^2.0.1",
     "serve-static": "^1.13.2",
     "session-memory-store": "^0.2.2",
-    "twit": "^2.2.9"
+    "twit": "^2.2.9",
+    "winston": "^2.4.1"
   }
 }

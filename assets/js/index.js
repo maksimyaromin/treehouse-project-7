@@ -4,7 +4,6 @@ const updateTimeline = () => {
 
     const make = (tweet) => {
         const at = moment(tweet.at);
-        console.log(at);
         return `
             <li>
                 <strong class="app--tweet--timestamp">${at.fromNow(true)}</strong>
@@ -56,25 +55,125 @@ const updateTimeline = () => {
         });
 };
 
+const updateFriend = (cursor = -1) => {
+    const context = $(".app--user--list");
+
+    const push = (friend) => {
+        const hasContact = context.find(`[data-uid="${friend.id}"]`);
+        if(hasContact.length) {
+            return;
+        }
+        const contact = $(`
+            <li data-uid="${friend.id}">
+                <div class="circle--fluid">
+                    <div class="circle--fluid--cell circle--fluid--primary">
+                        <a class="app--tweet--author">
+                            <div class="app--avatar" style="background-image: url(${friend.avatar})">
+                                <img src="${friend.avatar}" />
+                            </div>
+                            <h4>${friend.displayName}</h4>
+                            <p>@${friend.normalizedName}</p>
+                        </a>
+                        <ul class="app--tweet--actions circle--list--inline">
+                            <li>
+                                <a class="app--direct-message">
+                                    <span class="tooltip">Direct message</span>
+                                    <svg viewBox="0 0 38 28">
+                                        <use xlink:href="./images/sprite.svg#letter" x="0px" y="0px"></use>
+                                    </svg>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="circle--fluid--cell">
+                        ${friend.following 
+                            ? `<a class="button button-text">Unfollow</a>` 
+                            : `<a class="button">Follow</a>`
+                        }
+                    </div>
+                </div>
+            </li>`).appendTo(context);
+
+    };
+
+    const makeNext = (cursor) => {
+        const nextButton = $(`
+            <li class="circle--more">
+                <a class="button button-text">More</a>
+            </li>`).appendTo(context);
+        nextButton.off("click").on("click", e => {
+            e.preventDefault();
+            nextButton.remove();
+            updateFriend(cursor);
+        });
+    };
+
+    fetch(`/friends?cursor=${cursor}`, { credentials: "same-origin" })
+        .then(response => {
+            return response.json();
+        })
+        .then(response => {
+            if(response.friends) {
+                response.friends.forEach(friend => push(friend));
+            }
+            if(response.cursor) {
+                makeNext(response.cursor);
+            }
+        });
+
+};
+
+//1458071713
+const loadMessages = (id = 1458071713) => {
+
+    fetch(`/messages/${id}`, { credentials: "same-origin" })
+        .then(response => {
+            return response.json();
+        })
+        .then(response => {
+            console.log(response);
+        });
+
+};
+
+const openMessages = () => {
+    const messages = $(".messages"),
+        messagesHeader = $(".messages-header"),
+        timeline = $(".timeline"),
+        timelineHeader = $(".timeline-header");
+
+    timelineHeader.addClass("grid-33").removeClass("grid-66");
+    timeline.addClass("grid-33").removeClass("grid-66");
+    messagesHeader.addClass("grid-33").show();
+    messages.addClass("grid-33").show();
+};
+
+const closeMessages = () => {
+    const messages = $(".messages"),
+        messagesHeader = $(".messages-header"),
+        timeline = $(".timeline"),
+        timelineHeader = $(".timeline-header");
+
+    timelineHeader.addClass("grid-66").removeClass("grid-33");
+    timeline.addClass("grid-66").removeClass("grid-33");
+    messagesHeader.hide().removeClass("grid-33");
+    messages.hide().removeClass("grid-33");
+};
+
 $(document).ready(() => {
 
     moment.updateLocale('en', {
         relativeTime : {
             past: "%s ago",
-            s: "a few seconds",
-            ss: "%ds",
-            m:  "a minute",
-            mm: "%dm",
-            h:  "1h",
-            hh: "%dh",
-            d:  "a day",
-            dd: "%dd",
-            M:  "a month",
-            MM: "%dm",
-            y:  "a year",
-            yy: "%dy"
+            s: "1s", ss: "%ds",
+            m:  "1m", mm: "%dm",
+            h:  "1h", hh: "%dh",
+            d:  "1d", dd: "%dd",
+            M:  "1m", MM: "%dm",
+            y:  "1y", yy: "%dy"
         }
     });
-    updateTimeline();
-
+    //updateTimeline();
+    //updateFriend();
+    loadMessages();
 });
