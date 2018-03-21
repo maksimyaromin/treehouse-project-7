@@ -3,28 +3,31 @@ const User = require("./user");
 class Tweet {
     constructor(tweetDTO) {
         const {
-            id,
-            favorite_count,
+            id_str: id,
             favorited,
             created_at,
-            retweet_count,
             retweeted,
             text
         } = tweetDTO;
         this.id = id;
-        this.likes = favorite_count;
         this.liked = favorited;
         this.at = new Date(created_at);
-        this.retweets = retweet_count;
         this.retweeted = retweeted;
         this.isRetweet = !!tweetDTO.retweeted_status;
         this.text = text;
 
-        const author = this.isRetweet
-            ? tweetDTO.retweeted_status.user
-            : tweetDTO.user;
+        let status;
+        if(this.isRetweet) {
+            status = tweetDTO.retweeted_status;
+        } else {
+            status = tweetDTO;
+        }
+        const { user, favorite_count, retweet_count } = status;
         
-        this.author = new User(author);
+        this.author = new User(user);
+        this.likes = favorite_count;
+        this.retweets = retweet_count;
+
         if(this.isRetweet) {
             this.retweeter = new User(tweetDTO.user);
         }

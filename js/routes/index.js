@@ -81,9 +81,30 @@ module.exports = (twit) => {
 
     router.get("/messages/:id", (req, res) => {
         const id = req.params.id;
-        twit.get("/direct_messages/events/show", { id },
+        twit.get("/direct_messages/events/list", { id },
             (err, data, callback) => {
                 res.json(data);
+            });
+    });
+
+
+
+    router.post("/api/like", (req, res) => {
+        twit.post("/favorites/create", { id: req.body.id },
+            (err, data, callback) => {
+                const { errors } = data;
+                if(errors) {
+                    res.json({ done: false, errors });
+                } else {
+                    res.json({ done: true });
+                }
+            });
+    });
+
+    router.post("/api/unlike", (req, res) => {
+        twit.post("/favorites/destroy", { id: req.body.id },
+            (err, data, callback) => {
+                res.json({ done: true });
             });
     });
 

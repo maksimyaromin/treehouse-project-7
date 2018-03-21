@@ -7,8 +7,9 @@ const MemoryStore = require("session-memory-store")(session);
 const path = require("path");
 const winston = require("winston");
 const expressWinston = require("express-winston");
+const bodyParser = require("body-parser");
 
-const config = require("./js/config");
+const config = require("./config");
 const Twit = require("twit");
 
 const app = express();
@@ -34,8 +35,10 @@ app.use(expressWinston.logger({
         })
     ],
     expressFormat: true,
-    ignoreRoute: (req, res) => { console.log(res.statusCode); return res.statusCode < 400; }
+    ignoreRoute: (req, res) => { return res.statusCode < 400; }
 }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", require("./js/routes")(
     new Twit(config)
 ));

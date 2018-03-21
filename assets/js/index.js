@@ -5,7 +5,7 @@ const updateTimeline = () => {
     const make = (tweet) => {
         const at = moment(tweet.at);
         return `
-            <li>
+            <li class="tweet" data-uid="${tweet.id}">
                 <strong class="app--tweet--timestamp">${at.fromNow(true)}</strong>
                 <a class="app--tweet--author">
                     <div class="app--avatar" style="background-image: url(${tweet.author.avatar})">
@@ -45,6 +45,48 @@ const updateTimeline = () => {
             </li>`;
     };
 
+    const changeLikes = (context, number) => {
+        let count = parseInt(context.text(), 10) || 0;
+        count += number;
+        context.text(count ? count : "");
+    };
+
+    const like = (target, tweetContext) => {
+        fetch(`/api/like`, {
+            credentials: "same-origin",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: tweetContext.data("uid") })
+        }).then(response => {
+            return response.json();
+        }).then(response => {
+            if(response.done) {
+                target.addClass("app--like--done");
+                changeLikes(target.find("strong"), 1);
+            } 
+        });
+    };
+
+    const unlike = (target, tweetContext) => {
+        fetch(`/api/unlike`, {
+            credentials: "same-origin",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: tweetContext.data("uid") })
+        }).then(response => {
+            return response.json();
+        }).then(response => {
+            if(response.done) {
+                target.removeClass("app--like--done");
+                changeLikes(target.find("strong"), -1);
+            } 
+        });
+    };
+
     fetch("/tweets", { credentials: "same-origin" })
         .then((response) => {
             return response.json();
@@ -52,6 +94,15 @@ const updateTimeline = () => {
         .then(tweets => {
             const html = tweets.map(tweet => make(tweet)).join("");
             context.html(html);
+
+            context.find(".app--like").off("click").on("click", e => {
+                e.preventDefault();
+                const target = $(e.target).closest("a");
+                const tweetContext = target.closest("li.tweet");
+                target.hasClass("app--like--done")
+                    ? unlike(target, tweetContext)
+                    : like(target, tweetContext);
+            });
         });
 };
 
@@ -173,7 +224,7 @@ $(document).ready(() => {
             y:  "1y", yy: "%dy"
         }
     });
-    //updateTimeline();
+    updateTimeline();
     //updateFriend();
-    loadMessages();
+    //loadMessages();
 });
