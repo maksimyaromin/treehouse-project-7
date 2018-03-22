@@ -1,3 +1,26 @@
+const openWindow = (content, behaviour) => {
+
+    const context = $(
+        `<div class="window">
+            <div class="window-overlay"></div>
+            <div class="window-content">${content}</div>
+        </div>`).appendTo($("body"))
+            .one("animationend oAnimationEnd mozAnimationEnd webkitAnimationEnd", () => {
+                $(document.body).on("click.window", () => {
+                    closeWindow();
+                });
+                context.find(".window-content").on("click.window", e => e.stopPropagation());
+            });
+
+    const closeWindow = () => {
+        context.addClass("close-window").one("animationend oAnimationEnd mozAnimationEnd webkitAnimationEnd", () => {
+            $(document.body).off("click.window");
+            context.remove();
+        });
+    };
+
+};
+
 
 const updateTimeline = () => {
     const context = $(".app--tweet--list");
@@ -6,6 +29,16 @@ const updateTimeline = () => {
         const at = moment(tweet.at);
         return `
             <li class="tweet" data-uid="${tweet.id}">
+                ${tweet.isRetweet
+                    ? 
+                        `<div class="app--tweet--retweet">
+                            <svg viewBox="0 0 38 28">
+                                <use xlink:href="./images/sprite.svg#retweet" x="0px" y="0px"></use>
+                            </svg>
+                            <span>Retweeted by</span>
+                            <strong>${tweet.retweeter.displayName}</strong>
+                        </div>`
+                    : ""}
                 <strong class="app--tweet--timestamp">${at.fromNow(true)}</strong>
                 <a class="app--tweet--author">
                     <div class="app--avatar" style="background-image: url(${tweet.author.avatar})">
@@ -87,6 +120,40 @@ const updateTimeline = () => {
         });
     };
 
+    const retweet = (target, tweetContext) => {
+        fetch(`/api/retweet`, {
+            credentials: "same-origin",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: tweetContext.data("uid") })
+        }).then(response => {
+            return response.json();
+        }).then(response => {
+            if(response.done) {
+                updateTimeline();
+            } 
+        });
+    };
+
+    const unretweet = (target, tweetContext) => {
+        fetch(`/api/unretweet`, {
+            credentials: "same-origin",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: tweetContext.data("uid") })
+        }).then(response => {
+            return response.json();
+        }).then(response => {
+            if(response.done) {
+                updateTimeline();
+            } 
+        });
+    };
+
     fetch("/tweets", { credentials: "same-origin" })
         .then((response) => {
             return response.json();
@@ -102,6 +169,45 @@ const updateTimeline = () => {
                 target.hasClass("app--like--done")
                     ? unlike(target, tweetContext)
                     : like(target, tweetContext);
+            });
+
+            context.find(".app--retweet").off("click").on("click", e => {
+                e.preventDefault();
+                const target = $(e.target).closest("a");
+                const tweetContext = target.closest("li.tweet");
+                target.hasClass("app--retweet--done")
+                    ? unretweet(target, tweetContext)
+                    : retweet(target, tweetContext);
+            });
+
+            context.find(".app--reply").off("click").on("click", e => {
+                e.preventDefault();
+                const target = $(e.target).closest("a");
+                const tweetContext = target.closest("li.tweet");
+
+                const tweetHTML = tweetContext.clone();
+                tweetHTML.find(".app--tweet--actions").remove();
+                const id = tweetHTML.data("uid");
+                const tweet = tweets.find(item => item.id === id);
+                console.log(tweet);
+                const content = `
+                    <div class="reply-modal">
+                        <header class="reply-header">
+                            Reply to ${tweet.author.displayName}
+                        </header>
+                        <div class="reply-tweet">
+                            ${tweetHTML.html()}
+                        </div>
+                        <div class="reply-tweet--form">
+                            <div class="reply--users">
+                                В ответ @${tweet.author.normalizedName} ${tweet.isRetweet
+                                    ? `и @${tweet.retweeter.normalizedName}`
+                                    : ""
+                                }
+                            </div>
+                        </div>
+                    </div>`;
+                openWindow(content);
             });
         });
 };

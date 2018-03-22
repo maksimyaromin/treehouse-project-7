@@ -108,5 +108,19 @@ module.exports = (twit) => {
             });
     });
 
+    router.post("/api/retweet", (req, res) => {
+        twit.post("/statuses/retweet/:id", { id: req.body.id },
+            (err, data, callback) => {
+                res.json({ done: true });
+            });
+    });
+
+    router.post("/api/unretweet", (req, res) => {
+        twit.post("/statuses/unretweet/:id", { id: req.body.id },
+            (err, data, callback) => {
+                res.json({ done: true });
+            });
+    });
+
     return router;
 };
