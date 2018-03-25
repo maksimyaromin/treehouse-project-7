@@ -1,5 +1,14 @@
-const openWindow = (content, behaviour) => {
 
+const lettersCounter = (inputContext) => {
+    const counterContext = inputContext.parent().find(".app--tweet--char");
+    const limit = 140;
+    inputContext.on("input", e => {
+        const counted = limit - e.target.value.length;
+        counterContext.text(counted);
+    });
+};
+
+const openWindow = (content, behaviour) => {
     const context = $(
         `<div class="window">
             <div class="window-overlay"></div>
@@ -9,7 +18,11 @@ const openWindow = (content, behaviour) => {
                 $(document.body).on("click.window", () => {
                     closeWindow();
                 });
+                context.find(".action--close").on("click", closeWindow);
                 context.find(".window-content").on("click.window", e => e.stopPropagation());
+                if(typeof behaviour === "function") {
+                    behaviour(context);
+                }
             });
 
     const closeWindow = () => {
@@ -18,9 +31,7 @@ const openWindow = (content, behaviour) => {
             context.remove();
         });
     };
-
 };
-
 
 const updateTimeline = () => {
     const context = $(".app--tweet--list");
@@ -98,7 +109,9 @@ const updateTimeline = () => {
             if(response.done) {
                 target.addClass("app--like--done");
                 changeLikes(target.find("strong"), 1);
-            } 
+            } else {
+                alert(response.message);
+            }
         });
     };
 
@@ -116,7 +129,9 @@ const updateTimeline = () => {
             if(response.done) {
                 target.removeClass("app--like--done");
                 changeLikes(target.find("strong"), -1);
-            } 
+            } else {
+                alert(response.message);
+            }
         });
     };
 
@@ -133,7 +148,9 @@ const updateTimeline = () => {
         }).then(response => {
             if(response.done) {
                 updateTimeline();
-            } 
+            } else {
+                alert(response.message);
+            }
         });
     };
 
@@ -150,7 +167,9 @@ const updateTimeline = () => {
         }).then(response => {
             if(response.done) {
                 updateTimeline();
-            } 
+            } else {
+                alert(response.message);
+            }
         });
     };
 
@@ -189,11 +208,11 @@ const updateTimeline = () => {
                 tweetHTML.find(".app--tweet--actions").remove();
                 const id = tweetHTML.data("uid");
                 const tweet = tweets.find(item => item.id === id);
-                console.log(tweet);
                 const content = `
                     <div class="reply-modal">
                         <header class="reply-header">
-                            Reply to ${tweet.author.displayName}
+                            <h3>Reply to ${tweet.author.displayName}</h3>
+                            <span class="action--close"></span>
                         </header>
                         <div class="reply-tweet">
                             ${tweetHTML.html()}
@@ -205,9 +224,52 @@ const updateTimeline = () => {
                                     : ""
                                 }
                             </div>
+                            <div class="reply--content">
+                                <form>
+                                    <div class="app--tweet--post">
+                                        <textarea maxlength="140" class="circle--textarea--input" id="reply-textarea" name="reply" placeholder="Твитнуть в ответ"></textarea>
+                                        <strong class="app--tweet--char" id="tweet-char-reply">140</strong>
+                                    </div>
+                                    <div class="app--tweet--button">
+                                        <button id="btnReply" class="button-primary">Reply</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>`;
-                openWindow(content);
+                openWindow(content, context => {
+                    const textarea = context.find(".circle--textarea--input");
+                    lettersCounter(textarea);
+
+                    $("#btnReply").off("click").on("click", e => {
+                        e.preventDefault();
+                        const tweetMessage = context.find("#reply-textarea").val();
+                        if(!tweetMessage) {
+                            return alert("Введите текст твита для отправки");
+                        }
+                        fetch("/api/reply", {
+                            credentials: "same-origin",
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ 
+                                id,
+                                message: tweetMessage,
+                                username: tweet.author.normalizedName,
+                            })
+                        }).then(response => {
+                            return response.json();
+                        }).then(response => {
+                            if(response.done) {
+                                $(document.body).trigger("click.window");
+                                updateTimeline();
+                            } else {
+                                alert(response.message);
+                            } 
+                        });
+                    });
+                });
             });
         });
 };
@@ -231,26 +293,46 @@ const updateFriend = (cursor = -1) => {
                             <h4>${friend.displayName}</h4>
                             <p>@${friend.normalizedName}</p>
                         </a>
-                        <ul class="app--tweet--actions circle--list--inline">
-                            <li>
-                                <a class="app--direct-message">
-                                    <span class="tooltip">Direct message</span>
-                                    <svg viewBox="0 0 38 28">
-                                        <use xlink:href="./images/sprite.svg#letter" x="0px" y="0px"></use>
-                                    </svg>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
-                    <div class="circle--fluid--cell">
+                    <div class="circle--fluid--cell follow--buttons">
                         ${friend.following 
-                            ? `<a class="button button-text">Unfollow</a>` 
-                            : `<a class="button">Follow</a>`
+                            ? `<a id="btnUnfollow" class="button button-text">Unfollow</a>` 
+                            : `<a id="btnFollow" class="button">Follow</a>`
                         }
                     </div>
                 </div>
             </li>`).appendTo(context);
-
+        const friendship = (e, isFollow) => {
+            e.preventDefault();
+            const userContext = $(e.target).closest("li");
+            const id = userContext.data("uid");
+            const method = isFollow ? "/api/follow" : "/api/unfollow";
+            fetch(method, {
+                credentials: "same-origin",
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ id })
+            }).then(response => {
+                return response.json();
+            }).then(response => {
+                if(response.done) {
+                    const buttonsContext = userContext.find(".follow--buttons");
+                    buttonsContext.html("");
+                    const button = $(isFollow 
+                        ? `<a id="btnUnfollow" class="button button-text">Unfollow</a>`
+                        : `<a id="btnFollow" class="button">Follow</a>`).appendTo(buttonsContext);
+                    button.off("click").on("click", e => friendship(e, !isFollow));
+                    const friendsCount = +$("#friends").text() || 0;
+                    $("#friends").text(friendsCount + (isFollow ? 1 : -1));
+                } else {
+                    alert(response.message);
+                }
+            });
+        };
+        contact.find("#btnUnfollow").off("click").on("click", e => friendship(e, false));
+        contact.find("#btnFollow").off("click").on("click", e => friendship(e, true));
     };
 
     const makeNext = (cursor) => {
@@ -280,46 +362,90 @@ const updateFriend = (cursor = -1) => {
 
 };
 
-//1458071713
-const loadMessages = (id = 1458071713) => {
+const initTweet = () => {
+    const textareaContext = $("#tweet-textarea");
+    lettersCounter(textareaContext);
 
-    fetch(`/messages/${id}`, { credentials: "same-origin" })
-        .then(response => {
+    $("#btnTweet").off("click").on("click", e => {
+        e.preventDefault();
+        const tweetMessage = textareaContext.val();
+        if(!tweetMessage) {
+            return alert("Введите текст твита для отправки");
+        }
+        fetch("/api/tweet", {
+            credentials: "same-origin",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ 
+                message: tweetMessage
+            })
+        }).then(response => {
+            return response.json();
+        }).then(response => {
+            if(response.done) {
+                textareaContext.val("");
+                updateTimeline();
+            } else {
+                alert(response.message);
+            } 
+        });
+    });
+};  
+
+const updateMessages = () => {
+    const context = $(".app--message--list");
+
+    const makeMessage = (message, groupContext) => {
+        const at = moment(+message.at);
+        $(`
+            <li class="${message.myself 
+                ? "app--message--me" : "app--message"
+            }">
+                <div class="app--avatar" style="background-image: url(${message.avatar})">
+                <img src="${message.avatar}" />
+                </div>
+                <p class="app--message--text">${message.text}</p>
+                <p class="app--message--timestamp">${at.fromNow(true)}</p>
+            </li>`).appendTo(groupContext);
+    };
+
+    const makeGroup = (group) => {
+        const groupContext = $(`
+            <li>
+                <h3>Conversation with <a>${group[0]}</a></h3>
+                <ul class="app--message--conversation"></ul>
+            </li>`).appendTo(context).find(".app--message--conversation");
+        for (const message of group[1]) {
+            makeMessage(message, groupContext);
+        }
+    };
+
+    fetch("/messages", { credentials: "same-origin" })
+        .then((response) => {
             return response.json();
         })
-        .then(response => {
-            console.log(response);
+        .then(messages => {
+            if(!messages) { return; }
+            const groups = new Map();
+            for (const message of messages) {
+                if(groups.has(message.conversationName)) {
+                    groups.get(message.conversationName)
+                        .push(message);
+                } else {
+                    groups.set(message.conversationName, [ message ]);
+                }
+            }
+            for (const group of groups) {
+                makeGroup(group);
+            }
         });
-
-};
-
-const openMessages = () => {
-    const messages = $(".messages"),
-        messagesHeader = $(".messages-header"),
-        timeline = $(".timeline"),
-        timelineHeader = $(".timeline-header");
-
-    timelineHeader.addClass("grid-33").removeClass("grid-66");
-    timeline.addClass("grid-33").removeClass("grid-66");
-    messagesHeader.addClass("grid-33").show();
-    messages.addClass("grid-33").show();
-};
-
-const closeMessages = () => {
-    const messages = $(".messages"),
-        messagesHeader = $(".messages-header"),
-        timeline = $(".timeline"),
-        timelineHeader = $(".timeline-header");
-
-    timelineHeader.addClass("grid-66").removeClass("grid-33");
-    timeline.addClass("grid-66").removeClass("grid-33");
-    messagesHeader.hide().removeClass("grid-33");
-    messages.hide().removeClass("grid-33");
 };
 
 $(document).ready(() => {
 
-    moment.updateLocale('en', {
+    moment.updateLocale("en", {
         relativeTime : {
             past: "%s ago",
             s: "1s", ss: "%ds",
@@ -330,7 +456,8 @@ $(document).ready(() => {
             y:  "1y", yy: "%dy"
         }
     });
+    initTweet();
     updateTimeline();
-    //updateFriend();
-    //loadMessages();
+    updateFriend();
+    updateMessages();
 });

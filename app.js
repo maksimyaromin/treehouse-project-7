@@ -30,12 +30,11 @@ app.use(session({
 app.use(expressWinston.logger({
     transports: [
         new winston.transports.File({
-            filename: "logs/errors.log",
+            filename: "logs/list.log",
             colorize: true
         })
     ],
-    expressFormat: true,
-    ignoreRoute: (req, res) => { return res.statusCode < 400; }
+    expressFormat: true
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,10 +42,18 @@ app.use("/", require("./js/routes")(
     new Twit(config)
 ));
 app.use((req, res, next) => {
-    res.status(404).render("error");
+    res.status(404).render("error", {
+        title: "Ups! Not Found",
+        code: 404,
+        message: "Запрошенная вами страница не найдена"
+    });
 });  
 app.use((err, req, res, next) => {
-    res.status(500).render("error");
+    res.status(500).render("error", {
+        title: "Ups! Server Error",
+        code: res.statusCode,
+        message: err.message
+    });
 });
 
 http.createServer(app).listen(app.get("port"), () => {

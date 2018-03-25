@@ -1,4 +1,4 @@
-header.circle--header
+header.circle--header(style=`background-image: url(${background})`)
     div.bounds
         div.circle--fluid
             div.circle--fluid--cell
@@ -9,4 +9,4 @@ header.circle--header
             div.circle--fluid--cell.align-right
                 nav
                     ul.circle--inline
-                        li: a Sign Out
+                        li: a(href="/signout") Sign Out

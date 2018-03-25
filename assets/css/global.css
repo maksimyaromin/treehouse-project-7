@@ -4008,7 +4008,6 @@ input[type="button"] {
   width: auto;
   height: auto;
   min-width: 250px;
-  min-height: 450px;
   z-index: 10000;
   background-color: white;
   border-radius: 6px;
@@ -4039,4 +4038,144 @@ input[type="button"] {
 
 .reply-modal {
   width: 590px;
+}
+
+.reply-header {
+  position: relative;
+  border-bottom: 1px solid #e6ecf0;
+  padding: 12px;
+  text-align: center;
+}
+
+.reply-header h3 {
+  width: 85%;
+  margin: 0 auto;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.action--close {
+  position: absolute;
+  display: block;
+  width: 20px;
+  height: 20px;
+  right: 12px;
+  top: calc(50% - 10px);
+  cursor: pointer;
+}
+
+.action--close::after, .action--close::before {
+  position: absolute;
+  content: "";
+  width: 1px;
+  height: 100%;
+  background-color: #c6e7fc;
+  transition: background-color 200ms;
+}
+
+.action--close:hover::after, .action--close:hover::before {
+  background-color: #1da1f2;
+}
+
+.action--close::before {
+  transform: rotate(-45deg);
+}
+
+.action--close::after {
+  transform: rotate(45deg);
+}
+
+.reply-tweet {
+  position: relative;
+  min-height: 51px;
+  padding: 15px;
+}
+
+.reply-tweet p {
+  padding-left: 70px;
+}
+
+.reply-tweet .app--avatar {
+  margin-left: 0;
+  margin-right: 16px;
+}
+
+.reply-tweet--form {
+  position: relative;
+  padding: 12px;
+  background-color: #e8f5fe;
+  border-radius: 0px 0px 6px 6px;
+}
+
+.reply--users {
+  padding-bottom: 8px;
+  font-size: 14px;
+}
+
+.reply--content .app--tweet--post {
+  position: relative;
+  min-height: 80px;
+  padding: 0;
+}
+
+.reply--content .app--tweet--post .circle--textarea--input {
+  width: 100%;
+  height: 100%;
+  padding: 8px 56px 8px 8px;
+  border-width: 2px;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.reply--content .app--tweet--post .app--tweet--char {
+  bottom: auto;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+}
+
+.app--tweet--button {
+  margin-top: 8px;
+  direction: rtl;
+}
+
+.app--tweet--button .button-primary {
+  margin: 0;
+}
+
+.message {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: #aeddfa;
+  top: 0;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.message .message--text {
+  margin: 40px 0;
+  display: inline-block;
+}
+
+.message .message--text h3 {
+  font-size: 24px;
+  font-weight: 300;
+}
+
+.message .message--text h3 a {
+  padding: 0 15px;
+}
+
+.message h3 {
+  margin: 0;
+}
+
+.message .message--code {
+  margin-top: 200px;
+}
+
+.message .message--code h3 {
+  font-size: 48px;
+  font-weight: 100;
 }
