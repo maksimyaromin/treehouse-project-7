@@ -109,7 +109,8 @@ module.exports = (twit) => {
                 Promise.all(tasks)
                     .then(() => {
                         res.json(messages);
-                    });
+                    })
+                    .catch(err => next(err));
             });
     });
 
