@@ -1,4 +1,5 @@
 
+/* Функция для подсчета символов введенного сообщения */
 const lettersCounter = (inputContext) => {
     const counterContext = inputContext.parent().find(".app--tweet--char");
     const limit = 140;
@@ -8,6 +9,7 @@ const lettersCounter = (inputContext) => {
     });
 };
 
+/* Функция открытия диалогового окна (для ответа на твит) */
 const openWindow = (content, behaviour) => {
     const context = $(
         `<div class="window">
@@ -33,9 +35,11 @@ const openWindow = (content, behaviour) => {
     };
 };
 
+/* Функция обновления ленты */
 const updateTimeline = () => {
     const context = $(".app--tweet--list");
 
+    /* Генерация ХТМЛ отдельного твита на основе модели */
     const make = (tweet) => {
         const at = moment(tweet.at);
         return `
@@ -89,12 +93,14 @@ const updateTimeline = () => {
             </li>`;
     };
 
+    /* Изменть количество лайков */
     const changeLikes = (context, number) => {
         let count = parseInt(context.text(), 10) || 0;
         count += number;
         context.text(count ? count : "");
     };
 
+    /* Поставить лайк на твит */
     const like = (target, tweetContext) => {
         fetch(`/api/like`, {
             credentials: "same-origin",
@@ -115,6 +121,7 @@ const updateTimeline = () => {
         });
     };
 
+    /* Убрать лайк */
     const unlike = (target, tweetContext) => {
         fetch(`/api/unlike`, {
             credentials: "same-origin",
@@ -135,6 +142,7 @@ const updateTimeline = () => {
         });
     };
 
+    /* Ретвитнуть твит */
     const retweet = (target, tweetContext) => {
         fetch(`/api/retweet`, {
             credentials: "same-origin",
@@ -154,6 +162,7 @@ const updateTimeline = () => {
         });
     };
 
+    /* Отменить ретвит */
     const unretweet = (target, tweetContext) => {
         fetch(`/api/unretweet`, {
             credentials: "same-origin",
@@ -173,6 +182,8 @@ const updateTimeline = () => {
         });
     };
 
+    /* Используя фетч апи загрузить 5 последних твитов в ленту и навесить обработчики на кнопки лайка, ретвита и 
+        ответа на твит */
     fetch("/tweets", { credentials: "same-origin" })
         .then((response) => {
             return response.json();
@@ -274,6 +285,7 @@ const updateTimeline = () => {
         });
 };
 
+/* Обновить список ваших подписок */
 const updateFriend = (cursor = -1) => {
     const context = $(".app--user--list");
 
@@ -335,6 +347,8 @@ const updateFriend = (cursor = -1) => {
         contact.find("#btnFollow").off("click").on("click", e => friendship(e, true));
     };
 
+    /* Ваших подписчиков можно подгружать порциями по 5. Если эта функция доступна, то в конце списка будет кнопка
+        "Загрузить больше" */
     const makeNext = (cursor) => {
         const nextButton = $(`
             <li class="circle--more">
@@ -362,6 +376,7 @@ const updateFriend = (cursor = -1) => {
 
 };
 
+/* Навесить обработчики на поле твита */
 const initTweet = () => {
     const textareaContext = $("#tweet-textarea");
     lettersCounter(textareaContext);
@@ -394,6 +409,7 @@ const initTweet = () => {
     });
 };  
 
+/* Загрузить и отобразить последних 5 сообщений */
 const updateMessages = () => {
     const context = $(".app--message--list");
 
@@ -428,6 +444,7 @@ const updateMessages = () => {
         })
         .then(messages => {
             if(!messages) { return; }
+            /* Сообщения отображаются по группам, в которых ключ - это человек, с которым вы вели переписку. */
             const groups = new Map();
             for (const message of messages) {
                 if(groups.has(message.conversationName)) {
@@ -456,6 +473,7 @@ $(document).ready(() => {
             y:  "1y", yy: "%dy"
         }
     });
+    /* После инициализации приложения вызвать все основные функции */
     initTweet();
     updateTimeline();
     updateFriend();
