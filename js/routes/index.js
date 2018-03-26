@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-/* Подключение простых моделей, описывающих требуемые для работы приложения сущности. Модели написаны для порядка,
-    естественно можно было бы обойтись без них. */
+/* Connection of simple models, which describe entities required for the application. 
+    The models are written for orderliness, but one can surely do without it. */
 const User = require("../models/user");
 const Tweet = require("../models/tweet");
 const Friend = require("../models/friend");
@@ -10,8 +10,8 @@ const Message = require("../models/message");
 
 const SITE_TITLE = "Twitter Client";
 
-/* В примере простой аутентификации пользователю в сессию просто проставляется признак authenticated. Эта функция
-    проверяет наличие этого признака, и если его нет перенаправляет на страницу авторизации. */
+/* In the example of simple authentication the  attribute 'authenticated' is put into user session. 
+    The function checks for the attribute and if not found redirects to the authorization page . */
 const isAuthenticated = (req, res, next) => {
     if(req.session && req.session.authenticated) {
         next();
@@ -20,7 +20,7 @@ const isAuthenticated = (req, res, next) => {
     }
 };
 
-/* Простые функции сериализации пользователя в JSON и десериализации JSON в модель User. Сделано для порядка. */
+/* Simple user serialization functions in JSON and deserialization JSON in model User. Made for orderliness. */
 const serializeUser = ({ 
     id, 
     normalizedName: screen_name,
@@ -37,7 +37,7 @@ const deserializeUser = (userJSON) => {
     return user;
 };
 
-/* Таблица маршрутиризации */
+/* Routing table */
 module.exports = (twit) => {
 
     router.get("/", [isAuthenticated, (req, res) => {
@@ -54,20 +54,20 @@ module.exports = (twit) => {
     router.get("/signout", (req, res) => {
         req.session.destroy(err => {
             res.render("logout", {
-                title: "Bue!"
+                title: "Bye!"
             });
         });
     });
 
     router.get("/auth/twitter", (req, res, next) => {
         twit.get("account/verify_credentials", (err, data, callback) => {
-            /* Здесь и далее если запрос к твиттер апи завершился с явной ошибкой, то эта ошибка пробрасывается далее
-                по таблице до мидлвэра 500 */
+            /* Here and after if the request to Twitter API has ended with an obvious error, then this error is 
+			flown further down the table to the middleware 500 */
             if(err) return next(err);
             const user = new User(data);
 
-            /* Если api успешно вернуло нам данные пользователя, то записать его модель в сессию и проставить признак
-                успешной аутентификации */
+            /* If API returns user data successfully, then write his model in the session and put an attribute
+                of successful authorization */
             req.session.user = serializeUser(user);
             req.session.authenticated = true;
             res.redirect("/");
@@ -114,10 +114,10 @@ module.exports = (twit) => {
             });
     });
 
-    /* Обращение к методам api не генерирует явную ошибку в большинстве случаев, а возвращает ответ с ошибкой. В этой 
-        функции проверяется статус ответа и возвращается соответствующий признак на клиент. В случае, если done = false
-        на клиенте выпадет alert со всеми сообщениями об ошибках. Это очень топорный способ, использовать который
-        следует только в целях деменстрации */
+    /* Calling api methods does not generate an obvious error in most cases, but returns error response.  
+        This function checks the response status and returns corresponding characteristic to the client. In case
+        when done = false client receives alert with all error massages. This way is rather clumsy, and might be used 
+        only for demonstration purposes*/
     const apiResponse = (data, res) => {
         const { errors } = data;
         if(errors) {
