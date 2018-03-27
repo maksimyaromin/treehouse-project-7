@@ -28,4 +28,15 @@ or
     node app.js
 ```
 
+#### After Review
+"Make a Pug/Jade template for the main page. The template should have spaces for:
+your 5 most recent tweets" - Sorry, I re-read the assignment and did not see this requirement anywhere! It says that I have to download the last 5 tweets. On the contrary, by what I see in the proposed layout these tweets should belong to different authors. But you certainly know better.
+
+"If you're going for Exceeds, I don't see the banner background image, and not to get that confused with the profile picture. Students get the two mixed when trying to determine what property to choose from the JSON response." - How? If you look at the views/header.pug, you will see:
+```pug
+    header.circle--header(style=`background-image: url(${background})`)
+```
+And if you look at the "/" route, you'll see that in this template the picture comes just from JSON property "profile_background_image_url" from Twitter API. In my opinion, everything is right, is not it?
+
+
 ### I hope you will enjoy it. Max Eremin
