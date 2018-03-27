@@ -65,7 +65,7 @@ module.exports = (twit) => {
     });
 
     router.get("/tweets", (req, res, next) => {
-        twit.get("statuses/home_timeline", { count: 5 }, 
+        twit.get("statuses/user_timeline", { count: 5 }, 
             (err, data, callback) => 
         {
             if(err) return next(err);
