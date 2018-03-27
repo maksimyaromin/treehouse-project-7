@@ -2,10 +2,46 @@ extends shared/layout.pug
 
 block styles
     link(href="https://fonts.googleapis.com/css?family=Work+Sans:400,600" rel="stylesheet")
-    link(rel="stylesheet" href="./css/global.css")
+    style.
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .message {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #aeddfa;
+            top: 0;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .message .message--text {
+            margin: 40px 0;
+            display: inline-block;
+        }
+
+        .message .message--text h3 {
+            font-size: 24px;
+            font-weight: 300;
+        }
+
+        .message .message--text h3 a {
+            padding: 0 15px;
+        }
+
+        .message h3 {
+            margin: 0;
+        }
+
+        .message .message--code {
+            margin-top: 200px;
+        }
 
 block body
     div.message
         div.message--text
-            h3 Зачем вы вышли с сайта?
-                a(href="/") Вернитесь назад
+            h3 Why are you leaving the site?
+                a(href="/") Come back

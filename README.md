@@ -1,8 +1,8 @@
 # Build a Twitter Interface
 
-Представляю вашему вниманию своб версию реализации задания по созданию твиттер клиента от Treehouse.
+Here I present to your kind attention my version of implementation of the Treehouse Task, building a Twitter Interface .
 
-Для того, чтобы запустить данное приложение вы должны зарегистрироваться в [Twitter App Manager](https://apps.twitter.com/) и иметь все необходимые токены. Вы должны записать эти токены в файл config.js в корне приложения. Формат файла:
+To start the application one should register in [Twitter App Manager](https://apps.twitter.com/) and have all the token needed. One should write all this token into config.js file of the application root. File format:
 ```js
     module.exports = {
         consumer_key: "",
@@ -11,13 +11,13 @@
         access_token_secret: ""
     };  
 ```
-Приложение загружает 5 последних твита в ленте, 5 ваших подписок (есть возможность порционно подгружать остальных) и 5 последних сообщений отправленных вами или отправленных вам. Также, хотя это не требуется по вашему заданию, я сделал активными все кнопки, присутствующие в макете. Через мое приложение вы можете поставить лайк, ретвитнуть твит или написать твит в ответ. Так же вы можете отписаться от подписчика (и подписаться на него снова пока вы не обновили страницу).
+The application downloads to your timeline 5 last twits, 5 of your followings (there is an opportunity to download on portions) and 5 last twits which were sent to you or by you. Although this is not required by the task, I made all the buttons presented on the layout active. With a help of my application one can put like, retwit and write twit back. Also you can unfollow and follow again unless the page is updated.
 
-Как и требуется в задании вы можете отправить новый твит в ленту используя интерфейс. Так же в заголовке отражается ваш бэкгроунд с твиттера.
+According to task requirements one can sent a new twit to timeline using the interface. Also the header displays your twitter background.
 
-Как и требуется в задании я использовал только вашу верстку. Ну дописал пару-тройку стилей. Надо заметить, что верстка не очень. Конечно умение использовать чужую верску важно для разработчика, но вы могли бы разрешать верстать самостоятельно. Но это брюжжание конечно.
+I used only your layout as it is required. Well, I added a couple of styles. An ability to use someone else's layout is for sure one of the most important developer's knowledges. But if you let a developer write its own layout then you can probably receive a one better layout which you can use further.  But this is my growling for sure.
 
-Для запуска приложения нужно во-первых создать config.js файл. А во вторых выполнить следующие команды в консоли:
+To start an application one first of all needs to create config.js file. And then  run the following commands in console:
 ```shell
     npm install
     npm start

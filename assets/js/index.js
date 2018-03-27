@@ -1,4 +1,5 @@
 
+/* The function for counting the characters of the entered message */
 const lettersCounter = (inputContext) => {
     const counterContext = inputContext.parent().find(".app--tweet--char");
     const limit = 140;
@@ -8,6 +9,7 @@ const lettersCounter = (inputContext) => {
     });
 };
 
+/* Function of opening the dialog window (to answer on twit) */
 const openWindow = (content, behaviour) => {
     const context = $(
         `<div class="window">
@@ -33,9 +35,11 @@ const openWindow = (content, behaviour) => {
     };
 };
 
+/* Timeline update function */
 const updateTimeline = () => {
     const context = $(".app--tweet--list");
 
+    /* HTML generation of a single twit based on the model */
     const make = (tweet) => {
         const at = moment(tweet.at);
         return `
@@ -89,12 +93,14 @@ const updateTimeline = () => {
             </li>`;
     };
 
+    /* Update likes quantity */
     const changeLikes = (context, number) => {
         let count = parseInt(context.text(), 10) || 0;
         count += number;
         context.text(count ? count : "");
     };
 
+    /* Put Like on twit */
     const like = (target, tweetContext) => {
         fetch(`/api/like`, {
             credentials: "same-origin",
@@ -115,6 +121,7 @@ const updateTimeline = () => {
         });
     };
 
+    /* Delete Like */
     const unlike = (target, tweetContext) => {
         fetch(`/api/unlike`, {
             credentials: "same-origin",
@@ -135,6 +142,7 @@ const updateTimeline = () => {
         });
     };
 
+    /* Retwit twit */
     const retweet = (target, tweetContext) => {
         fetch(`/api/retweet`, {
             credentials: "same-origin",
@@ -154,6 +162,7 @@ const updateTimeline = () => {
         });
     };
 
+    /* Cancel retwit */
     const unretweet = (target, tweetContext) => {
         fetch(`/api/unretweet`, {
             credentials: "same-origin",
@@ -173,6 +182,8 @@ const updateTimeline = () => {
         });
     };
 
+    /* Download 5 last twits to timeline with fetch api and set handlers on like, retwit and 
+        answer buttons */
     fetch("/tweets", { credentials: "same-origin" })
         .then((response) => {
             return response.json();
@@ -219,15 +230,15 @@ const updateTimeline = () => {
                         </div>
                         <div class="reply-tweet--form">
                             <div class="reply--users">
-                                В ответ @${tweet.author.normalizedName} ${tweet.isRetweet
-                                    ? `и @${tweet.retweeter.normalizedName}`
+                                Answer @${tweet.author.normalizedName} ${tweet.isRetweet
+                                    ? `and @${tweet.retweeter.normalizedName}`
                                     : ""
                                 }
                             </div>
                             <div class="reply--content">
                                 <form>
                                     <div class="app--tweet--post">
-                                        <textarea maxlength="140" class="circle--textarea--input" id="reply-textarea" name="reply" placeholder="Твитнуть в ответ"></textarea>
+                                        <textarea maxlength="140" class="circle--textarea--input" id="reply-textarea" name="reply" placeholder="Twit back"></textarea>
                                         <strong class="app--tweet--char" id="tweet-char-reply">140</strong>
                                     </div>
                                     <div class="app--tweet--button">
@@ -245,7 +256,7 @@ const updateTimeline = () => {
                         e.preventDefault();
                         const tweetMessage = context.find("#reply-textarea").val();
                         if(!tweetMessage) {
-                            return alert("Введите текст твита для отправки");
+                            return alert("Enter text to send twit");
                         }
                         fetch("/api/reply", {
                             credentials: "same-origin",
@@ -274,6 +285,7 @@ const updateTimeline = () => {
         });
 };
 
+/* Update the list of your followings */
 const updateFriend = (cursor = -1) => {
     const context = $(".app--user--list");
 
@@ -335,6 +347,8 @@ const updateFriend = (cursor = -1) => {
         contact.find("#btnFollow").off("click").on("click", e => friendship(e, true));
     };
 
+    /* Your follower can be uploaded in portions of 5. If this function is available, then at the end of the 
+        list there will be a button "More" */
     const makeNext = (cursor) => {
         const nextButton = $(`
             <li class="circle--more">
@@ -362,6 +376,7 @@ const updateFriend = (cursor = -1) => {
 
 };
 
+/* Set handlers on twit field */
 const initTweet = () => {
     const textareaContext = $("#tweet-textarea");
     lettersCounter(textareaContext);
@@ -370,7 +385,7 @@ const initTweet = () => {
         e.preventDefault();
         const tweetMessage = textareaContext.val();
         if(!tweetMessage) {
-            return alert("Введите текст твита для отправки");
+            return alert("Enter text to send twit");
         }
         fetch("/api/tweet", {
             credentials: "same-origin",
@@ -394,6 +409,7 @@ const initTweet = () => {
     });
 };  
 
+/* Download and display 5 last massages */
 const updateMessages = () => {
     const context = $(".app--message--list");
 
@@ -428,6 +444,7 @@ const updateMessages = () => {
         })
         .then(messages => {
             if(!messages) { return; }
+            /* Display messages by groups where key is a person you twit with. */
             const groups = new Map();
             for (const message of messages) {
                 if(groups.has(message.conversationName)) {
@@ -456,6 +473,7 @@ $(document).ready(() => {
             y:  "1y", yy: "%dy"
         }
     });
+    /* After application initializing, call all the main functions */
     initTweet();
     updateTimeline();
     updateFriend();
